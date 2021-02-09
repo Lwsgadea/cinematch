@@ -7,13 +7,11 @@ use App\Allocine\Allocine;
 use App\Repository\FilmRepository;
 use Doctrine\Persistence\ObjectManager as PersistenceObjectManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-// Pour la commande :php bin/console app:fetch-fresh-movie
+// Pour la commande: php bin/console app:fetch-fresh-movie
 
 class FetchFreshMoviesCommand extends Command
 {
@@ -23,16 +21,14 @@ class FetchFreshMoviesCommand extends Command
     private $objectManager;
     private $filmRepository;
 
-    public function __construct(Allocine $allocine, PersistenceObjectManager $manager, FilmRepository $filmRepository)
-    {
+    public function __construct(Allocine $allocine, PersistenceObjectManager $manager, FilmRepository $filmRepository) {
         parent::__construct();
         $this->allocine = $allocine;
         $this->objectManager = $manager;
         $this->filmRepository = $filmRepository;
     }
 
-    protected function configure()
-    {
+    protected function configure() {
         $this
             ->setDescription('Update the list of "fresh" movies')
             // ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
@@ -40,8 +36,7 @@ class FetchFreshMoviesCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $io = new SymfonyStyle($input, $output);
         // $arg1 = $input->getArgument('arg1');
 
@@ -97,7 +92,7 @@ class FetchFreshMoviesCommand extends Command
         // TODO ? : filtrer les films déjà présents en base
         foreach ($movies as $movieApiInfos) {
             $movie = new Film();
-            $movie->setCode($movieApiInfos['code']);
+            /* $movie->setCode($movieApiInfos['code']);
             if (isset($movieApiInfos['release']['releaseDate'])) {
                 $date = date_create_from_format('Y-m-d', $movieApiInfos['release']['releaseDate']);
                 if (!$date) {
@@ -118,7 +113,7 @@ class FetchFreshMoviesCommand extends Command
             $movie->setGenre($movieApiInfos['genre'][0]['$'] ?? '');
             $movie->setFresh(true);
             $movies[$movieApiInfos['code']] = $movie;
-            $this->objectManager->persist($movie);
+            $this->objectManager->persist($movie); */
         }
         $this->objectManager->flush();
 
