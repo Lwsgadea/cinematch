@@ -1,0 +1,57 @@
+name: app
+
+type: php:7.4
+
+runtime:
+    extensions:
+        - apcu
+        - mbstring
+        - sodium
+        - ctype
+        - iconv
+        - pdo-pgsql
+        
+
+relationships:
+    database: "cinematch:mysql"
+        
+
+#variables:
+#    php:
+#        # uncomment on PHP 7.4+
+#        #opcache.preload: /app/config/preload.php
+
+build:
+    flavor: none
+
+disk: 512
+
+
+web:
+    locations:
+        '/':
+            root: 'public'
+            passthru: '/index.php'
+
+        '/upload':
+            root: 'public/upload'
+            scripts: false
+            allow: true
+
+
+mounts:
+    '/var': { source: local, source_path: var }
+    '/public/upload': { source: local, source_path: uploads }
+
+hooks:
+    build: |
+        set -x -e
+
+        curl -fs https://get.symfony.com/cloud/configurator | (>&2 bash)
+        
+        (>&2 symfony-build)
+
+    deploy: |
+        set -x -e
+
+        (>&2 symfony-deploy)
